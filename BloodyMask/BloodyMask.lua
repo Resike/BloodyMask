@@ -38,18 +38,6 @@ local function PlayerHealthGetObjective(HealthPercent)
 	end
 end
 
-function BloodyMask:OnLoad()
-	PlayerHealthObjectives.Percent = UnitHealth("player") / UnitHealthMax("player")
-	BloodyMask:RegisterEvents()
-	BloodyMaskEventFrame:UnregisterEvent("ADDON_LOADED")
-end
-
-function BloodyMask:RegisterEvents()
-	BloodyMaskEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-	BloodyMaskEventFrame:RegisterEvent("UNIT_HEALTH")
-	BloodyMaskEventFrame:RegisterEvent("UNIT_MAXHEALTH")
-end
-
 local function PlayerHealthState(HealthPercent)
 	if HealthPercent >= BloodyMaskVariables.Health1 then
 		return 1
@@ -68,6 +56,19 @@ local function PlayerHealthState(HealthPercent)
 	else
 		return 10
 	end
+end
+
+function BloodyMask:OnLoad()
+	PlayerHealthObjectives.Percent = UnitHealth("player") / UnitHealthMax("player")
+	BloodyMask:RegisterEvents()
+	BloodyMaskEventFrame:UnregisterEvent("ADDON_LOADED")
+end
+
+function BloodyMask:RegisterEvents()
+	BloodyMaskEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+	BloodyMaskEventFrame:RegisterEvent("UNIT_HEALTH")
+	BloodyMaskEventFrame:RegisterEvent("UNIT_MAXHEALTH")
+	BloodyMaskEventFrame:RegisterEvent("PLAYER_DEAD")
 end
 
 function BloodyMask:OnEvent(event, ...)
@@ -115,7 +116,7 @@ function BloodyMask:OnEvent(event, ...)
 					if BloodyMaskTexture:GetTexture() ~= "Interface/AddOns/BloodyMask/Textures/Mask8.tga" then
 						BloodyMaskTexture:SetTexture(AddonPath.."Textures\\Mask8.tga")
 					end
-					PlaySoundFile(AddonPath.."Sounds\\MaskCrack4.mp3", BloodyMaskVariables.SoundChannel)
+					--PlaySoundFile(AddonPath.."Sounds\\MaskCrack4.mp3", BloodyMaskVariables.SoundChannel)
 				else
 					if BloodyMaskTexture:GetTexture() ~= "Interface/AddOns/BloodyMask/Textures/Dirt.tga" then
 						BloodyMaskTexture:SetTexture(AddonPath.."Textures\\Dirt.tga")
@@ -143,6 +144,8 @@ function BloodyMask:OnEvent(event, ...)
 				PlayerHealthObjectives[type] = PlayerHealthPercent
 			end
 		end
+	elseif event == "PLAYER_DEAD" then
+		PlaySoundFile(AddonPath.."Sounds\\MaskCrack4.mp3", BloodyMaskVariables.SoundChannel)
 	end
 end
 

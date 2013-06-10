@@ -1,8 +1,8 @@
 ﻿## Interface: 50300
-## Title: Bloody Mask |cFF99CC01rev|r |cFFFF00001.0.0|r
-## Notes: Simulates Metro's Gas Mask effect based on the player actions.
+## Title: Bloody Mask |cFF99CC01rev|r |cFFFF00001.0.1|r
+## Notes: Simulates Metro's Gas Mask effects based on your character's actions.
 ## Author: Resike
-## Version: 1.0.0
+## Version: 1.0.1
 ## SavedVariablesPerCharacter: BloodyMaskVariables
 ## DefaultState: Enabled
 
