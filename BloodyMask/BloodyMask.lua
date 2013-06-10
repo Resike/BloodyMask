@@ -28,20 +28,26 @@ BloodyMaskVariables = {
 
 local AddonPath = "Interface\\AddOns\\BloodyMask\\"
 
-function BloodyMask:OnLoad()
-	BloodyMaskEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-	BloodyMaskEventFrame:RegisterEvent("UNIT_HEALTH")
-	BloodyMaskEventFrame:RegisterEvent("UNIT_MAXHEALTH")
-end
-
-local PlayerHealthObjectives = {PlayerHealthPercent = nil}
+local PlayerHealthObjectives = {Percent = nil}
 
 local function PlayerHealthGetObjective(HealthPercent)
 	if HealthPercent then
-		return "PlayerHealthPercent"
+		return "Percent"
 	else
 		return false
 	end
+end
+
+function BloodyMask:OnLoad()
+	PlayerHealthObjectives.Percent = UnitHealth("player") / UnitHealthMax("player")
+	BloodyMask:RegisterEvents()
+	BloodyMaskEventFrame:UnregisterEvent("ADDON_LOADED")
+end
+
+function BloodyMask:RegisterEvents()
+	BloodyMaskEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+	BloodyMaskEventFrame:RegisterEvent("UNIT_HEALTH")
+	BloodyMaskEventFrame:RegisterEvent("UNIT_MAXHEALTH")
 end
 
 local function PlayerHealthState(HealthPercent)
@@ -68,9 +74,9 @@ function BloodyMask:OnEvent(event, ...)
 	if event == "ADDON_LOADED" then
 		local Addon = ...
 		if Addon == "BloodyMask" then
-			BloodyMask:OnLoad()
-			PlayerHealthObjectives.PlayerHealthPercent = UnitHealth("player") / UnitHealthMax("player")
-			BloodyMaskEventFrame:UnregisterEvent("ADDON_LOADED")
+			if BloodyMaskVariables.EnableAddon == true then
+				BloodyMask:OnLoad()
+			end
 		end
 	elseif event == "PLAYER_ENTERING_WORLD" or event == "UNIT_HEALTH" or event == "UNIT_MAXHEALTH" then
 		local PlayerHealthPercent = UnitHealth("player") / UnitHealthMax("player")
